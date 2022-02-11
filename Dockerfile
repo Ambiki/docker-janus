@@ -4,8 +4,8 @@
 # (Forked from: https://github.com/krull/docker-janus)
 ############################################################
 
-# set base image debian jessie
-FROM debian:buster
+# set base image debian bullseye
+FROM debian:bullseye
 
 # file maintainer author
 LABEL maintainer="kmeyerhofer <k@kcmr.io>"
@@ -109,7 +109,7 @@ RUN set -x && \
     tar xzf ./${LIBNICE_VERSION}.tar.gz -C . && \
     cd ./libnice-${LIBNICE_VERSION} && \
     if [ "${LIBNICE_VERSION}" > "0.1.17" ]; then meson builddir && \
-      sudo ninja -C builddir install; \
+      ninja -C builddir install; \
     else ./autogen.sh && \
       ./configure --prefix=/usr && \
       make && \
