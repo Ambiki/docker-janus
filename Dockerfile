@@ -1,14 +1,11 @@
 ############################################################
-# Dockerfile - Janus Gateway on Debian Buster
-# https://github.com/kmeyerhofer/docker-janus
+# Dockerfile - Janus Gateway on Debian Bullseye
+# https://github.com/Ambiki/docker-janus
 # (Forked from: https://github.com/krull/docker-janus)
 ############################################################
 
 # set base image debian bullseye
 FROM debian:bullseye
-
-# file maintainer author
-LABEL maintainer="kmeyerhofer <k@kcmr.io>"
 
 # library versions
 ARG   JANUS_VERSION=0.11.8
