@@ -113,19 +113,18 @@ RUN set -x && \
 
 # build boringssl
 RUN set -x && \
-    if [ $JANUS_WITH_BORINGSSL = "1" ]; then git clone https://boringssl.googlesource.com/boringssl ./boringssl && \
-      cd ./boringssl && \
+    if [ $JANUS_WITH_BORINGSSL = "1" ]; then git clone https://boringssl.googlesource.com/boringssl && \
+      cd boringssl && \
       sed -i s/" -Werror"//g CMakeLists.txt && \
-      mkdir -p ./build && \
-      cd ./build && \
+      mkdir -p build && \
+      cd build && \
       cmake -DCMAKE_CXX_FLAGS="-lrt" .. && \
       make && \
-      cd ../ && \
-      mkdir -p /opt/boringssl && \
-      cp -R ./boringssl/include /opt/boringssl/ && \
+      cd .. && \
       mkdir -p /opt/boringssl/lib && \
-      cp ./boringssl/build/ssl/libssl.a /opt/boringssl/lib/ && \
-      cp ./boringssl/build/crypto/libcrypto.a /opt/boringssl/lib/ \
+      cp -R include /opt/boringssl/ && \
+      cp build/ssl/libssl.a /opt/boringssl/lib/ && \
+      cp build/crypto/libcrypto.a /opt/boringssl/lib/ \
     ; fi
 
 # build usrsctp
