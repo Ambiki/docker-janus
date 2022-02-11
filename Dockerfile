@@ -1,19 +1,16 @@
 ############################################################
-# Dockerfile - Janus Gateway on Debian Buster
-# https://github.com/kmeyerhofer/docker-janus
+# Dockerfile - Janus Gateway on Debian Bullseye
+# https://github.com/Ambiki/docker-janus
 # (Forked from: https://github.com/krull/docker-janus)
 ############################################################
 
-# set base image debian jessie
-FROM debian:buster
-
-# file maintainer author
-LABEL maintainer="kmeyerhofer <k@kcmr.io>"
+# set base image debian bullseye
+FROM debian:bullseye
 
 # library versions
-ARG   JANUS_VERSION=0.10.7
-ARG LIBSRTP_VERSION=2.2.0
-ARG LIBNICE_VERSION=0.1.17
+ARG   JANUS_VERSION=0.11.8
+ARG LIBSRTP_VERSION=2.4.2
+ARG LIBNICE_VERSION=0.1.18
 
 # docker build arguments
 ARG JANUS_WITH_POSTPROCESSING="1"
@@ -43,6 +40,8 @@ ARG JANUS_BUILD_DEPS_DEV="\
     pkg-config \
     libconfig-dev \
     gtk-doc-tools \
+    meson \
+    ninja-build \
     "
 #    libnice-dev \ # Version 0.1.14 - outdated
 ARG JANUS_BUILD_DEPS_EXT="\
@@ -106,10 +105,13 @@ RUN set -x && \
     curl -fSL https://github.com/libnice/libnice/archive/${LIBNICE_VERSION}.tar.gz -o ./${LIBNICE_VERSION}.tar.gz && \
     tar xzf ./${LIBNICE_VERSION}.tar.gz -C . && \
     cd ./libnice-${LIBNICE_VERSION} && \
-    ./autogen.sh && \
-    ./configure --prefix=/usr && \
-    make && \
-    make install
+    if [ "${LIBNICE_VERSION}" > "0.1.17" ]; then meson builddir && \
+      ninja -C builddir install; \
+    else ./autogen.sh && \
+      ./configure --prefix=/usr && \
+      make && \
+      make install \
+    ; fi
 
 # build boringssl
 RUN set -x && \
