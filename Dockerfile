@@ -9,7 +9,7 @@ FROM debian:bullseye
 
 # library versions
 ARG   JANUS_VERSION=0.11.8
-ARG LIBSRTP_VERSION=2.2.0
+ARG LIBSRTP_VERSION=2.4.2
 ARG LIBNICE_VERSION=0.1.18
 
 # docker build arguments
