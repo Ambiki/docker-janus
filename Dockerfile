@@ -11,6 +11,7 @@ FROM debian:bullseye
 ARG   JANUS_VERSION=0.11.8
 ARG LIBSRTP_VERSION=2.4.2
 ARG LIBNICE_VERSION=0.1.18
+ARG LIBMICROHTTPD_VERSION=0.9.75
 
 # docker build arguments
 ARG JANUS_WITH_POSTPROCESSING="1"
@@ -76,7 +77,7 @@ RUN set -x && \
     if [ $JANUS_WITH_POSTPROCESSING = "1" ]; then export JANUS_CONFIG_OPTIONS="$JANUS_CONFIG_OPTIONS --enable-post-processing"; fi && \
     if [ $JANUS_WITH_BORINGSSL = "1" ]; then export JANUS_BUILD_DEPS_DEV="$JANUS_BUILD_DEPS_DEV golang-go" && export JANUS_CONFIG_OPTIONS="$JANUS_CONFIG_OPTIONS --enable-boringssl --enable-dtls-settimeout"; fi && \
     if [ $JANUS_WITH_DOCS = "1" ]; then export JANUS_BUILD_DEPS_DEV="$JANUS_BUILD_DEPS_DEV graphviz" && export JANUS_CONFIG_OPTIONS="$JANUS_CONFIG_OPTIONS --enable-docs"; fi && \
-    if [ $JANUS_WITH_REST = "1" ]; then export JANUS_BUILD_DEPS_DEV="$JANUS_BUILD_DEPS_DEV libmicrohttpd-dev"; else export JANUS_CONFIG_OPTIONS="$JANUS_CONFIG_OPTIONS --disable-rest"; fi && \
+    if [ $JANUS_WITH_REST = "0" ]; then export JANUS_CONFIG_OPTIONS="$JANUS_CONFIG_OPTIONS --disable-rest"; fi && \
     if [ $JANUS_WITH_DATACHANNELS = "0" ]; then export JANUS_CONFIG_OPTIONS="$JANUS_CONFIG_OPTIONS --disable-data-channels"; fi && \
     if [ $JANUS_WITH_WEBSOCKETS = "0" ]; then export JANUS_CONFIG_OPTIONS="$JANUS_CONFIG_OPTIONS --disable-websockets"; fi && \
     if [ $JANUS_WITH_MQTT = "0" ]; then export JANUS_CONFIG_OPTIONS="$JANUS_CONFIG_OPTIONS --disable-mqtt"; fi && \
@@ -90,6 +91,16 @@ RUN set -x && \
     DEBIAN_FRONTEND=noninteractive apt-get -y --no-install-recommends install $JANUS_BUILD_DEPS_DEV ${JANUS_BUILD_DEPS_EXT}
 
 WORKDIR /usr/local/src
+
+# build libmicrohttpd
+RUN set -x && \
+    if [ $JANUS_WITH_REST = "1" ]; then curl -fSL "https://ftp.gnu.org/gnu/libmicrohttpd/libmicrohttpd-${LIBMICROHTTPD_VERSION}.tar.gz" -o ./v${LIBMICROHTTPD_VERSION}.tar.gz && \
+      tar xzf ./v${LIBMICROHTTPD_VERSION}.tar.gz && \
+      cd libmicrohttpd-${LIBMICROHTTPD_VERSION} && \
+      ./configure && \
+      make && \
+      make install \
+    ; fi
 
 # build libsrtp
 RUN set -x && \
