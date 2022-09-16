@@ -11,7 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        janus_version: ["0.11.6", "0.11.7", "0.11.8"]
+        # Most 3 recent versions and highest of the last 2 minor versions
+        # list from - https://github.com/meetecho/janus-gateway/blob/0.x/CHANGELOG.md
+        janus_version: ["0.10.10", "0.11.8", "0.12.2", "0.12.3", "0.12.4"]
         build_arg_type: ["default", "full"]
         include:
           - build_arg_type: "default"
