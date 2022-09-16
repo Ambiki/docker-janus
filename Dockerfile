@@ -12,6 +12,7 @@ ARG   JANUS_VERSION=0.11.8
 ARG LIBSRTP_VERSION=2.4.2
 ARG LIBNICE_VERSION=0.1.18
 ARG LIBMICROHTTPD_VERSION=0.9.75
+ARG LIBWEBSOCKETS_VERSION=4.3.2
 
 # docker build arguments
 ARG JANUS_WITH_POSTPROCESSING="1"
@@ -126,7 +127,7 @@ RUN set -x && \
 
 # build boringssl
 RUN set -x && \
-    if [ $JANUS_WITH_BORINGSSL = "1" ]; then git clone https://boringssl.googlesource.com/boringssl && \
+    if [ $JANUS_WITH_BORINGSSL = "1" ]; then git clone --depth 1 https://boringssl.googlesource.com/boringssl && \
       cd boringssl && \
       sed -i s/" -Werror"//g CMakeLists.txt && \
       mkdir -p build && \
@@ -142,7 +143,7 @@ RUN set -x && \
 
 # build usrsctp
 RUN set -x && \
-    if [ $JANUS_WITH_DATACHANNELS = "1" ]; then git clone https://github.com/sctplab/usrsctp ./usrsctp && \
+    if [ $JANUS_WITH_DATACHANNELS = "1" ]; then git clone --depth 1 https://github.com/sctplab/usrsctp ./usrsctp && \
       cd ./usrsctp && \
       ./bootstrap && \
       ./configure --prefix=/usr && \
@@ -150,9 +151,9 @@ RUN set -x && \
       make install \
     ; fi
 
-# build libwebsockets
+# build libwebsockets  --depth 1 --branch <tag_name> <repo_url>
 RUN set -x && \
-    if [ $JANUS_WITH_WEBSOCKETS = "1" ]; then git clone https://github.com/warmcat/libwebsockets.git ./libwebsockets && \
+    if [ $JANUS_WITH_WEBSOCKETS = "1" ]; then git clone --depth 1 --branch v${LIBWEBSOCKETS_VERSION} https://github.com/warmcat/libwebsockets.git ./libwebsockets && \
       # cd ./libwebsockets && \
       # git checkout v1.5-chrome47-firefox41 && \
       mkdir ./libwebsockets/build && \
@@ -164,7 +165,7 @@ RUN set -x && \
 
 # build paho.mqtt.c
 RUN set -x && \
-    if [ $JANUS_WITH_MQTT = "1" ]; then git clone https://github.com/eclipse/paho.mqtt.c.git ./paho.mqtt.c && \
+    if [ $JANUS_WITH_MQTT = "1" ]; then git clone --depth 1  https://github.com/eclipse/paho.mqtt.c.git ./paho.mqtt.c && \
       cd ./paho.mqtt.c && \
       make && \
       make install \
@@ -172,7 +173,7 @@ RUN set -x && \
 
 # build rabbitmq-c
 RUN set -x && \
-    if [ $JANUS_WITH_RABBITMQ = "1" ]; then git clone https://github.com/alanxz/rabbitmq-c ./rabbitmq-c && \
+    if [ $JANUS_WITH_RABBITMQ = "1" ]; then git clone --depth 1  https://github.com/alanxz/rabbitmq-c ./rabbitmq-c && \
       cd ./rabbitmq-c && \
       git submodule init && \
       git submodule update && \
