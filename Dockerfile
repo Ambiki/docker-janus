@@ -151,7 +151,7 @@ RUN set -x && \
       make install \
     ; fi
 
-# build libwebsockets  --depth 1 --branch <tag_name> <repo_url>
+# build libwebsockets
 RUN set -x && \
     if [ $JANUS_WITH_WEBSOCKETS = "1" ]; then git clone --depth 1 --branch v${LIBWEBSOCKETS_VERSION} https://github.com/warmcat/libwebsockets.git ./libwebsockets && \
       # cd ./libwebsockets && \
