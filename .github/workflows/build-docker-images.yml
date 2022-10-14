@@ -11,9 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        # Most 3 recent versions and highest of the last 2 minor versions
+        # 4 recent 0.x versions
         # list from - https://github.com/meetecho/janus-gateway/blob/0.x/CHANGELOG.md
-        janus_version: ["0.10.10", "0.11.8", "0.12.2", "0.12.3", "0.12.4"]
+        janus_version: ["0.10.10", "0.11.8", "0.12.4", "0.13.0"]
         build_arg_type: ["default", "full"]
         include:
           - build_arg_type: "default"
@@ -31,7 +31,7 @@ jobs:
               --build-arg JANUS_WITH_FREESWITCH_PATCH=0"
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Build docker image with Janus version
       id: build
       run: docker build --build-arg JANUS_VERSION=${{ matrix.janus_version }} ${{ matrix.build_args }} . --file Dockerfile
