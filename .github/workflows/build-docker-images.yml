@@ -31,7 +31,7 @@ jobs:
               --build-arg JANUS_WITH_FREESWITCH_PATCH=0"
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Build docker image with Janus version
       id: build
       run: docker build --build-arg JANUS_VERSION=${{ matrix.janus_version }} ${{ matrix.build_args }} . --file Dockerfile
