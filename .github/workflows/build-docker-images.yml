@@ -14,7 +14,7 @@ jobs:
         # 2 recent 0.x versions, 2 recent 1.x versions
         # list from - https://github.com/meetecho/janus-gateway/blob/0.x/CHANGELOG.md
         # and https://github.com/meetecho/janus-gateway/blob/master/CHANGELOG.md
-        janus_version: ["0.12.4", "0.13.0", "1.1.0", "1.0.4"]
+        janus_version: ["0.12.4", "0.13.0", "1.0.4", "1.1.0"]
         build_arg_type: ["default", "full"]
         include:
           - build_arg_type: "default"
